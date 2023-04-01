@@ -30,10 +30,10 @@ jobs:
           flutter pub run rename_app:main all="Race Car"
       - name: Generate keystore
         run: |
-          keytool -genkey -v -keystore ./keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias "upload" -storepass "12345678" -keypass "12345678" -dname "CN=NameOrg, OU=NameOrg, O=NameOrg"
+          keytool -genkey -v -keystore ./android/app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias "upload" -storepass "12345678" -keypass "12345678" -dname "CN=NameOrg, OU=NameOrg, O=NameOrg"
       
       - name: Build app bundle
-        run: flutter build appbundle
+        run: flutter build appbundle --release
 
       - name: Upload app bundle
         uses: actions/upload-artifact@v2
