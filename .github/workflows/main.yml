@@ -7,15 +7,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-      - name: Install Flutter
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
         uses: subosito/flutter-action@v1
-        with:
-          flutter-version: '2.8.1'
+
+      - name: Get dependencies
+        run: flutter pub get
       - name: Build App Bundle
         run: flutter build appbundle --release
         env:
