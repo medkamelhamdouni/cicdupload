@@ -13,7 +13,7 @@ jobs:
         with:
           java-version: '11'
       - name: Install Flutter
-        uses: subosito/flutter-action@v1.12.2
+        uses: subosito/flutter-action@v1
         with:
           flutter-version: '2.8.1'
       - name: Build App Bundle
