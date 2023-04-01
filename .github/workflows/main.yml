@@ -1,0 +1,44 @@
+name: Build and sign release app bundle
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+      - name: Install Flutter
+        uses: subosito/flutter-action@v1.12.2
+        with:
+          flutter-version: '2.8.1'
+      - name: Build App Bundle
+        run: flutter build appbundle --release
+        env:
+          KEYSTORE_PASSWORD: 'upload'
+          KEY_PASSWORD: 'upload'
+          STORE_PASSWORD: 'upload'
+          KEY_ALIAS: 'upload'
+          KEYSTORE_NAME: 'keystore.jks'
+          KEYSTORE_ALIAS: 'upload'
+          KEYSTORE_DESTINATION: './android/app'
+      - name: Sign App Bundle
+        uses: android-actions/setup-jdk@v2
+        with:
+          java-version: 11
+      - name: Sign Bundle
+        run: |
+          jarsigner -keystore $KEYSTORE_DESTINATION/$KEYSTORE_NAME -storepass $STORE_PASSWORD -keypass $KEY_PASSWORD -verbose -sigalg SHA1withRSA -digestalg SHA1 -signedjar app-release-signed.aab app-release.aab $KEY_ALIAS
+          ${ANDROID_HOME}/build-tools/31.0.0/zipalign -v -p 4 app-release-signed.aab app-release.aab
+        env:
+          KEYSTORE_PASSWORD: 'upload'
+          KEY_PASSWORD: 'upload'
+          STORE_PASSWORD: 'upload'
+          KEY_ALIAS: 'upload'
+          KEYSTORE_NAME: 'keystore.jks'
+          KEYSTORE_ALIAS: 'upload'
+          KEYSTORE_DESTINATION: './android/app'
